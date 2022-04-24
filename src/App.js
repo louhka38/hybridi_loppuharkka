@@ -1,12 +1,24 @@
 import React from 'react';
 import './i18n';
 
-import { Provider, connect } from 'react-redux';
+import { Provider as StoreProvider} from 'react-redux';
+import { connect } from 'react-redux';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+
 import { createStore, combineReducers } from 'redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import screens from './screens/_index';
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'teal',
+    accent: 'black',
+  },
+};
 
 // A very simple reducer
 function count(state, action) {
@@ -29,6 +41,8 @@ function lang(state, action) {
       return 'EN';
     case 'FI':
       return 'FI';
+    case 'SW':
+      return 'SW';
     default:
       return 'EN';
   }
@@ -50,14 +64,18 @@ const App = () => {
     }; // { key, componet, statecomponent }
     return screen;
   })
-  return (<Provider store={store}>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName={screens[0].key}>
-        {/* screens.map((s) => <Stack.Screen name={s.key} key={s.key} component={s.component} />) */}
-        {stateContainers.map((s) => <Stack.Screen name={s.key} key={s.key} component={s.statecomponent} />)}
-      </Stack.Navigator>
-    </NavigationContainer>
-  </Provider>);
+  return (
+    <StoreProvider store={store}>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={screens[0].key}>
+            {/* screens.map((s) => <Stack.Screen name={s.key} key={s.key} component={s.component} />) */}
+            {stateContainers.map((s) => <Stack.Screen name={s.key} key={s.key} component={s.statecomponent} />)}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </StoreProvider>
+    );
 };
 
 export default App;

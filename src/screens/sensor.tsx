@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, LogBox } from 'react-native';
 import * as Sensors from 'react-native-sensors';
+import { useTranslation } from 'react-i18next';
 
 type SType = keyof typeof Sensors.SensorTypes;
 const axis = [ "x", "y", "z" ];
@@ -14,9 +15,9 @@ const availableSensors = {
 export type MyProps = {}
 type MyState = {
     [key: string]: any;
-    subscription: any;
-    count: number|string|boolean|null|undefined|object;
-    error: any;
+    subscription?: any;
+    count?: number|string|boolean|null|undefined|object;
+    error?: any;
 }
 
 const Value: React.FC<{ name: string, value: number }> = ({ name, value }) => (
@@ -52,7 +53,7 @@ const genericSensorView = (sensorType: SType, fields: string[]) => {
 
         render() {
             return (<View>
-                <Text>values</Text>
+                <Text>Values</Text>
                 {fields.map((valueName) => (
                     <Value key={sensorType + valueName} name={valueName} value={this.state[valueName]} />
                 ))}
@@ -64,15 +65,17 @@ const genericSensorView = (sensorType: SType, fields: string[]) => {
 const viewComponents = Object.entries(availableSensors).map(([name, values]: any) => genericSensorView(name, values));
 
 export const Sensor: React.FC = () => {
-
+    const { t, i18n } = useTranslation();
+    LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+    LogBox.ignoreAllLogs(); //Ignore all log notifications
     const exampleList: string[] = [
         'eka',
         'toka',
         'kolmas'
     ];
 
-    return (<View>
-        <Text>hello from sensor</Text>
+    return (<View style={styles.main}>
+        <Text style={styles.txt}>{t("HelloFromSensor")}</Text>
         <ScrollView>
             {/* exampleList.map((item) => <View key={"item-"+item}><Text>{item}</Text></View>) */}
             {viewComponents.map((Comp:any, index) => <Comp key={"sensor-"+index} />)}
@@ -80,4 +83,18 @@ export const Sensor: React.FC = () => {
     </View>);
 };
 
+const styles = StyleSheet.create({
+    main: {
+        backgroundColor: "aqua",
+        height: 900
+    },
+    txt: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: "teal",
+        marginTop: 10,
+        marginBottom: 15
+    },
+})
 export default Sensor;

@@ -1,9 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
+import { red500, white } from 'react-native-paper/lib/typescript/styles/colors';
 
 import { screenkeys } from './_index';
+
 
 const settingOpts = (opts={lang: 'EN'}) => {
     const _settings = {
@@ -13,7 +16,6 @@ const settingOpts = (opts={lang: 'EN'}) => {
 }
 
 export const Home = ({ navigation, dispatch, lang }) => {
-    // const [settings, initSettings] = React.useState(settingOpts());
     const { t, i18n } = useTranslation();
 
     React.useEffect(() => {
@@ -33,9 +35,9 @@ export const Home = ({ navigation, dispatch, lang }) => {
     }, []);
 
     return (<View style={styles.main}>
-        <Text>{t("home")}</Text>
-        { screenkeys.map((skey) => skey !== 'home' && <View style={styles.btn} key={"home-"+skey}>
-                <Button style={styles.btn} title={skey} onPress={() => navigation.navigate(skey)}/>
+        <Text style={styles.txt}>{t("home")}</Text>
+        { screenkeys.map((skey) => skey !== 'home' && skey !== 'note-editor' && <View style={styles.btn} key={"home-"+skey}>
+                <Button style={styles.btn} mode='contained' compact='true' onPress={() => navigation.navigate(skey)}>{skey}</Button>
             </View>
         )}
     </View>);
@@ -43,10 +45,22 @@ export const Home = ({ navigation, dispatch, lang }) => {
 
 const styles = StyleSheet.create({
     main: {
-
+        backgroundColor: "aqua",
+        height: 900
+    },
+    txt: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: "teal",
+        marginTop: 10,
+        marginBottom: 15
     },
     btn: {
-        marginTop: 16
+        width: 200,
+        alignSelf: 'center',
+        marginTop: 8,
+        marginBottom: 8
     }
 })
 
